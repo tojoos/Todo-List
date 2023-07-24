@@ -3,6 +3,7 @@ package tojoos.todolist.pojo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "id", nullable = false, unique = true)
+  @JdbcTypeCode(java.sql.Types.VARCHAR)
   private UUID id;
 
   @Lob
