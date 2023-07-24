@@ -3,6 +3,7 @@ package tojoos.todolist.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TaskRepositoryTest {
 
   @Autowired
@@ -92,10 +94,10 @@ public class TaskRepositoryTest {
     taskRepository.save(task1);
 
     task1.setDescription("Changed description.");
-
     Task updatedTask = taskRepository.save(task1);
 
     assertEquals(1, taskRepository.findAll().size());
     assertEquals(task1.getId(), updatedTask.getId());
+    assertEquals(task1.getDescription(), updatedTask.getDescription());
   }
 }
