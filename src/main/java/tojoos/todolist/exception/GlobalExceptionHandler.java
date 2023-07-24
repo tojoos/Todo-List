@@ -28,8 +28,8 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(apiError, apiError.status());
   }
 
-  @ExceptionHandler({InvalidUUIDException.class, HttpMessageNotReadableException.class, IllegalArgumentException.class})
-  public final ResponseEntity<Object> handleInvalidUUIDException(RuntimeException ex, HttpServletRequest request) {
+  @ExceptionHandler({HttpMessageNotReadableException.class, IllegalArgumentException.class})
+  public final ResponseEntity<Object> handleInvalidIllegalArgumentAndHttpMessageNotReadableException(RuntimeException ex, HttpServletRequest request) {
     ApiError apiError = new ApiError(
         LocalDateTime.now(),
         request.getRequestURI(),
@@ -37,6 +37,18 @@ public class GlobalExceptionHandler {
         ex.getMessage()
     );
     log.error(ex.getMessage());
+    return new ResponseEntity<>(apiError, apiError.status());
+  }
+
+  @ExceptionHandler({InvalidUUIDException.class})
+  public final ResponseEntity<Object> handleInvalidUUIDException(InvalidUUIDException ex, HttpServletRequest request) {
+    ApiError apiError = new ApiError(
+            LocalDateTime.now(),
+            request.getRequestURI(),
+            HttpStatus.BAD_REQUEST,
+            ex.getErrorMessage()
+    );
+    log.error(ex.getErrorMessage());
     return new ResponseEntity<>(apiError, apiError.status());
   }
 
