@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/task")
-@CrossOrigin(origins = "http://localhost:4200")
 public class TaskController {
 
   private final TaskService taskService;
@@ -47,6 +46,6 @@ public class TaskController {
   @PutMapping("/")
   public ResponseEntity<Task> update(@RequestBody Task task) {
     Task updatedTask = taskService.update(task);
-    return new ResponseEntity<>(updatedTask, HttpStatus.FOUND);
+    return new ResponseEntity<>(updatedTask, HttpStatus.OK);
   }
 }

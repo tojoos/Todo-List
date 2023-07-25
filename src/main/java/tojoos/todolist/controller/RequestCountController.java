@@ -7,7 +7,6 @@ import tojoos.todolist.service.RequestCountService;
 
 @RestController
 @RequestMapping("/requestCount")
-@CrossOrigin(origins = "http://localhost:4200")
 public class RequestCountController {
 
     private final RequestCountService requestCountService;
