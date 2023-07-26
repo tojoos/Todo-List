@@ -57,7 +57,6 @@ export class TasksComponent implements OnInit {
       next: (response: Task) => {
         console.log(response);
         this.getTasks();
-        this.getRequestCount();
         addForm.reset();
       },
       error: (error: HttpErrorResponse) => {
@@ -73,7 +72,6 @@ export class TasksComponent implements OnInit {
       next: (response: Task) => {
         console.log(response);
         this.getTasks();
-        this.getRequestCount();
         },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -86,7 +84,6 @@ export class TasksComponent implements OnInit {
       next: (response: void) => {
         console.log(response);
         this.getTasks();
-        this.getRequestCount();
         },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
