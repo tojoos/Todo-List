@@ -13,19 +13,20 @@ export class TaskService {
     this.apiServerUrl = 'http://localhost:8080';
   }
 
-  public findAll(): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiServerUrl}/task/list`);
+  public findAll(sortBy?: string): Observable<Task[]> {
+    const url = sortBy ? `${this.apiServerUrl}/task/list?sortBy=${sortBy}` : `${this.apiServerUrl}/task/list`;
+    return this.http.get<Task[]>(url);
   }
 
   public add(task: Task): Observable<Task> {
-    return this.http.post<Task>(`${this.apiServerUrl}/task/add`, task);
+    return this.http.post<Task>(`${this.apiServerUrl}/task/`, task);
   }
 
   public update(task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.apiServerUrl}/task/update`, task);
+    return this.http.put<Task>(`${this.apiServerUrl}/task/`, task);
   }
 
-  public deleteById(taskId: number): Observable<void> {
+  public deleteById(taskId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/task/${taskId}`);
   }
 }
