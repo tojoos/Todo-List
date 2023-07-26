@@ -1,18 +1,24 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
 import { TasksComponent } from './tasks/tasks.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TasksComponent
+    TasksComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [TasksComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private titleService: Title) {
+    this.titleService.setTitle("Todo List");
+   }
+}
