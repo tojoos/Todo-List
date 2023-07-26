@@ -12,7 +12,11 @@ import { NgForm } from '@angular/forms';
 })
 export class TasksComponent implements OnInit {
   public tasks: Task[] = [];
+  public allTasks: Task[] = [];
+  public editTask!: Task | undefined;
+  public deleteTask!: Task | undefined;
   public currentRequestCount: Number = 0;
+  public activeSortButton: number = 0;
 
   constructor(
     private taskService: TaskService,
@@ -21,42 +25,6 @@ export class TasksComponent implements OnInit {
   ngOnInit() {
     this.getTasks();
     this.getRequestCount();
-  }
-
-  public getTasks(): void {
-    this.taskService.findAll().subscribe({
-      next: (response: Task[]) => {
-        this.tasks = response;
-      },
-      error: (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    });
-  }
-
-  //add add/update/delte handlers - use form maybe todo it as such in announcement components
-
-  //add task - formularz
-  public onAddAnnouncement(addForm: NgForm): void {
-    document.getElementById('add-announcement-form')!.click();
-
-    console.log(addForm.value)
-
-    this.announcementService.addAnnouncement(addForm.value).subscribe({
-      next: (response: Announcement) => {
-        console.log(response);
-        this.getAnnouncements();
-        addForm.reset();
-        },
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 403) {
-          alert("Couldn't create an announcement. Make sure you are logged in.")
-        } else {
-          alert(error)
-        }
-        addForm.reset();
-      }
-    });
   }
 
   public getRequestCount(): void {
@@ -70,14 +38,41 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  public getAnnouncements(): void {
-    this.announcementService.getAnnouncements().subscribe({
-      next: (response: Announcement[]) => {
-        this.announcements = response;
-        this.announcements.sort((f1, f2) => new Date(f2.creationDateTime).getTime() - new Date(f1.creationDateTime).getTime());
-        this.announcements.sort((f1, f2) => f2.status === 'closed' ? -1 : 1)
-        this.latestAnnouncement = this.announcements[0]
-        this.announcements.splice(0,1)
+  public getTasks(field? : string): void {
+    this.taskService.findAll(field).subscribe({
+      next: (response: Task[]) => {
+        this.tasks = response;
+        this.allTasks = this.tasks;
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    });
+  }
+
+  public onAddTask(addForm: NgForm): void {
+    document.getElementById('add-form')!.click();
+    this.taskService.add(addForm.value).subscribe({
+      next: (response: Task) => {
+        console.log(response);
+        this.getTasks();
+        this.getRequestCount();
+        addForm.reset();
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+        addForm.reset();
+      }
+    });
+  }
+
+  public onUpdateTask(task: Task): void {
+    document.getElementById('edit-form')!.click();
+    this.taskService.update(task).subscribe({
+      next: (response: Task) => {
+        console.log(response);
+        this.getTasks();
+        this.getRequestCount();
         },
       error: (error: HttpErrorResponse) => {
         alert(error.message);
@@ -85,13 +80,56 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  public onOpenModal(mode: string, announcement?: Announcement): void {
+  public onDeleteTask(taskId: string): void {
+    this.taskService.deleteById(taskId).subscribe({
+      next: (response: void) => {
+        console.log(response);
+        this.getTasks();
+        this.getRequestCount();
+        },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    });
+  }
+
+  public searchTasks(key: string): void {
+    const results: Task[] = [];
+    this.tasks = this.allTasks;
+    for (const task of this.tasks) {
+      if (task.description.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || task.priority.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || task.title.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      ) {
+        results.push(task);
+      }
+    }
+    this.tasks = results;
+    if (!key) {
+      this.tasks = this.allTasks;
+    }
+  }
+
+  public sortBy(field: string, buttonNumber: number): void {
+    this.activeSortButton = buttonNumber;
+    this.getTasks(field);
+  }
+
+  public onOpenModal(mode: string, task?: Task): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#addAnnouncementModal');
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addModal');
+    } else if (mode === 'edit') {
+      this.editTask = task!;
+      button.setAttribute('data-target', '#editModal');
+    } else if (mode === 'delete') {
+      this.deleteTask = task!;
+      button.setAttribute('data-target', '#deleteModal');
+    }
     container!.appendChild(button);
     button.click();
   }

@@ -1,11 +1,16 @@
-/* Timeline holder */
+body {
+  background: #E8CBC0;
+  background: -webkit-linear-gradient(to right, #E8CBC0, #636FA4);
+  background: linear-gradient(to right, #E8CBC0, #636FA4);
+  min-height: 100vh;
+}
+
 ul.timeline {
   list-style-type: none;
   position: relative;
   padding-left: 1.5rem;
 }
 
-/* Timeline vertical line */
 ul.timeline:before {
   content: ' ';
   background: #fff;
@@ -18,11 +23,15 @@ ul.timeline:before {
   border-radius: 1rem;
 }
 
+.main-container {
+  display: flex;
+  justify-content: center;
+}
+
 li.timeline-item {
   margin: 20px 0;
 }
 
-/* Timeline item arrow */
 .timeline-arrow {
   border-top: 0.5rem solid transparent;
   border-right: 0.5rem solid #fff;
@@ -32,7 +41,6 @@ li.timeline-item {
   left: 2rem;
 }
 
-/* Timeline item circle marker */
 li.timeline-item::before {
   content: ' ';
   background: #ddd;
@@ -47,11 +55,10 @@ li.timeline-item::before {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-body {
-  background: #E8CBC0;
-  background: -webkit-linear-gradient(to right, #E8CBC0, #636FA4);
-  background: linear-gradient(to right, #E8CBC0, #636FA4);
-  min-height: 100vh;
+.timeline, .title-bar {
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
 }
 
 .rotated {
@@ -59,25 +66,20 @@ body {
   transform: rotate(-180deg);
 }
 
-.avatar-text {
-  color:rgb(175, 174, 174);
-  justify-content: center;
-  font-weight: 700;
-  font-size: 24px;
-}
-
-.ico {
-  color: #7564e5;
-  font-size: 22px;
-  margin-right: 8px;
-}
-
 .title {
+  font-size: 24px;
   color: #604be7;
 }
 
-.subtitle {
-  font-size: 26px;
+.card-title {
+  color: white;
+  font-weight: 300;
+  font-size: 30px;
+}
+
+.timestamp {
+  font-size: 16px;
+  color: #604be7;
 }
 
 .contact-text {
@@ -91,7 +93,44 @@ body {
   float: right;
 }
 
+.btn-edit-delete {
+  background-color: #ffffff;
+  color: black;
+  border-width: 0;
+  text-transform: capitalize;
+  -webkit-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+.btn-edit-delete:hover,
+.btn-edit-delete:focus {
+  background: #604be7;
+  color: #fff;
+}
+
 .btn-sm {
   font-weight: 300;
   font-size: 16px;
+  margin-right: 10px;
+}
+
+.btn-sm:hover,
+.btn-sm:focus {
+  background: #604be7;
+  color: #fff;
+}
+
+.sort-btn {
+  font-weight: 300;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.sort-btn:hover {
+  text-decoration: underline;
+}
+
+.sort-btn.active {
+  text-decoration: underline;
 }
