@@ -1,0 +1,214 @@
+<body>
+  <div id="main-container" class="container py-5">
+  
+    <div class="row text-center text-white mb-0">
+      <div class="col-lg-8 mx-auto">
+        <h1 class="display-3">To-Do List</h1>
+        <div class="text-white font-weight-light">
+          Current request count:
+        </div>
+        <h2 class="text-center">{{ currentRequestCount }}</h2>
+      </div>
+    </div>
+
+    <div class="container mt-4 mb-4" style="width: 80%;">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <h5 *ngIf="tasks" class="card-title">Your tasks<span class="text-muted fw-normal ms-2"> ({{tasks.length}})</span>
+            </h5>
+          </div>
+          <div class="d-flex align-items-center pl-1 gap-2">
+            <div class="text-white font-weight-light">
+              Sort by:
+            </div>
+            <div>
+              <button type="button" [ngClass]="{ 'active': activeSortButton === 1 }" class="btn sort-btn text-white" (click)="sortBy('title', 1)">
+                Title
+              </button>
+            </div>
+            <div>
+              <div class="font-weight-light text-white">
+                |
+              </div>
+            </div>
+            <div>
+              <button type="button" [ngClass]="{ 'active': activeSortButton === 2 }" class="btn sort-btn text-white" (click)="sortBy('creationTimeStamp', 2)">
+                CreationTimeStamp
+              </button>
+            </div>
+            <div>
+              <div class="font-weight-light text-white">
+                |
+              </div>
+            </div>
+            <div>
+              <button type="button" [ngClass]="{ 'active': activeSortButton === 3 }" class="btn sort-btn text-white" (click)="sortBy('description', 3)">
+                Description
+              </button>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-md-6 pt-5">
+          <div class="d-flex flex-wrap align-items-center justify-content-end gap-2">
+            <div>
+              <button type="button" class="btn btn-sm text-white" (click)="onOpenModal('add')">
+                <i class="fa-solid fa-plus mr-2"></i>Create new task
+              </button>
+            </div>
+            <form class="form-inline my-2 my-lg-0">
+              <input type="search" (ngModelChange)="searchTasks(key.value)" #key="ngModel" ngModel
+                    name="key" id="searchName" class="form-control mr-sm-2" placeholder="Find task..." required>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <ul class="timeline">
+        <div *ngFor="let task of tasks">
+          <li class="timeline-item bg-white rounded ml-3 p-4 shadow">
+            <div class="timeline-arrow"></div>
+          
+            <div class="d-flex justify-content-between">
+              <div class="title">{{ task?.title }}</div>
+              <div class="small timestamp"><i class="fa-solid fa-clock mr-2"></i>{{ task?.creationTimeStamp }}</div>
+            </div>
+
+            <p class="text-small mt-2 font-weight-light">{{task?.description}}</p>
+            <div class="row">
+                <p class="text-small timestamp mt-2 ml-3 font-weight-light"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Priority: <span style="font-weight: 500">{{task?.priority}}</span></p>
+            </div>
+      
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-soft-primary btn-edit-delete btn-sm w-50" (click)="onOpenModal('edit', task)">
+                <i class="bx bx-user me-1"></i><i class="fa-regular fa-pen-to-square mr-2"></i>Edit
+              </button>
+              <button type="button" class="btn btn-primary btn-edit-delete btn-sm w-50 btn-dlt" (click)="onOpenModal('delete', task)">
+                <i class="bx bx-message-square-dots me-1"></i><i class="fa-solid fa-trash-can mr-2"></i>Delete
+              </button>          
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+  
+</body>
+
+<!-- Delete Modal -->
+<div class="modal fade mt-5" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog mt-5" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModelLabel">Delete Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this "{{ deleteTask?.title }}"?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button (click)="onDeleteTask(deleteTask!.id)" class="btn btn-danger" data-dismiss="modal">Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade mt-5" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog mt-5" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Edit Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="form-group">
+            <input type="hidden" ngModel="{{editTask?.id}}" name="id" class="form-control" id="id">
+            <input type="hidden" ngModel="{{editTask?.creationTimeStamp}}" name="creationTimeStamp" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Task title</label>
+            <input type="email" ngModel="{{editTask?.title}}" name="title" class="form-control" id="title"
+                   placeholder="Title" required="required">
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea rows="4" type="description" ngModel="{{editTask?.description}}" name="description"
+             class="form-control" id="description" placeholder="Description of the announcement" required="required"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select type="priority" name="priority" ngModel="{{editTask?.priority}}" class="form-control" id="priority"
+            placeholder="Priority" required="required">
+              <option [value]="'LOW'" [selected]="editTask?.priority === 'LOW'">LOW</option>
+              <option [value]="'MEDIUM'" [selected]="editTask?.priority === 'MEDIUM'">MEDIUM</option>
+              <option [value]="'HIGH'" [selected]="editTask?.priority === 'HIGH'">HIGH</option>
+            </select>      
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="edit-form" data-dismiss="modal" class="btn btn-secondary">Close</button>
+            <button (click)="onUpdateTask(editForm.value)" [disabled]="editForm.invalid" data-dismiss="modal" class="btn btn-primary btn-dlt">
+              Save changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+  style="margin-top: 10%;" aria-hidden="true">
+  <div class="modal-dialog mt-5" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add new Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddTask(addForm)">
+          <div class="form-group">
+            <label for="email">Task title</label>
+            <input type="email" ngModel name="title" class="form-control" id="title"
+                    placeholder="Title" required="required">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea rows="4" type="description" ngModel name="description"
+              class="form-control" id="description" placeholder="Description of the task" required="required"></textarea>
+          </div>            
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select type="priority" name="priority" ngModel class="form-control" id="priority" placeholder="Priority" required="required">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM" selected>MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+            </select>      
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="add-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

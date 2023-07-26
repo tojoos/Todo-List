@@ -36,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
   public List<Task> findAll(String sortBy) {
     // Use the findAll method with Sort to get the sorted entities by input argument, if not specified return unsorted
     if (sortBy != null) {
-      if (sortBy.equals("creationTimeStamp")) {
+      if (sortBy.equals("creationTimeStamp") || sortBy.equals("title") | sortBy.equals("description")) {
         return taskRepository.findAll(Sort.by(Sort.Order.by(sortBy)));
       } else if (sortBy.equals("priority")) {
         return getTasksSortedByPriority();

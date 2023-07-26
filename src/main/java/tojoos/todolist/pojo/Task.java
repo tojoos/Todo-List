@@ -19,6 +19,8 @@ public class Task {
   @JdbcTypeCode(java.sql.Types.VARCHAR)
   private UUID id;
 
+  private String title;
+
   @Lob
   private String description;
 

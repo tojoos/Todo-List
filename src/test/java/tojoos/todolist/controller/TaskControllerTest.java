@@ -185,7 +185,7 @@ class TaskControllerTest {
     mockMvc.perform(put("/task/")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(task)))
-            .andExpect(status().isFound())
+            .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.priority",
                     equalTo(null)))
