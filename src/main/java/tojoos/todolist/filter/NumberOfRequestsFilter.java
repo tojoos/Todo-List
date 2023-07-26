@@ -11,6 +11,7 @@ import tojoos.todolist.service.RequestCountService;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class NumberOfRequestsFilter extends OncePerRequestFilter {
 
@@ -22,7 +23,12 @@ public class NumberOfRequestsFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    requestCountService.incrementRequestCount();
+    // count all request sent to the dedicated '/task/' rest api
+    if (request.getRequestURI().contains("/task/")) {
+      log.info("Incoming request, [HTTP {}], URI: {}", request.getMethod(), request.getRequestURI());
+      requestCountService.incrementRequestCount();
+    }
+    //requestCountService.incrementRequestCount();
     filterChain.doFilter(request, response);
   }
 }
