@@ -48,6 +48,7 @@ export class TasksComponent implements OnInit {
         alert(error.message);
       }
     });
+    this.getRequestCount();
   }
 
   public onAddTask(addForm: NgForm): void {
