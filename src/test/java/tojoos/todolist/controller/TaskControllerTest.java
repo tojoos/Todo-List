@@ -6,7 +6,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -120,7 +118,6 @@ class TaskControllerTest {
   @Test
   void findByIdNotFound() throws Exception {
     String invalidUUid = "11111111-2222-3333-4444-555555555555";
-    Task task = Task.builder().id(UUID.randomUUID()).description("Some desc.").priority(Priority.HIGH).build();
 
     //when
     when(taskService.findById(any()))
