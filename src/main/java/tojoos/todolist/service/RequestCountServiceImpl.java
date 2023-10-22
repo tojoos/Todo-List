@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import tojoos.todolist.pojo.RequestCount;
 import tojoos.todolist.repository.RequestCountRepository;
 
+import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -20,13 +22,12 @@ public class RequestCountServiceImpl implements RequestCountService {
     }
 
     @Override
-    public Long incrementRequestCount() {
+    public void incrementRequestCount() {
         // ensure requestCount entity exists
         requestCountExists();
         Long requestCount = requestCountRepository.save(new RequestCount(requestCountId, getRequestCount() + 1)).getValue();
 
         log.info("Incrementing request count, current value = {}", requestCount);
-        return requestCount;
     }
 
     @Override
@@ -34,7 +35,6 @@ public class RequestCountServiceImpl implements RequestCountService {
         if (requestCountExists()) {
             RequestCount requestCount = requestCountRepository.findById(requestCountId)
                     .orElseThrow(() -> new EntityNotFoundException("Request entity not found."));
-            log.info("Getting current request count = {}", requestCount.getValue());
 
             return requestCount.getValue();
         } else {
@@ -43,12 +43,12 @@ public class RequestCountServiceImpl implements RequestCountService {
     }
 
     private boolean requestCountExists() {
-        RequestCount requestCount = requestCountRepository.findById(requestCountId).orElse(null);
-        if (requestCount == null) {
+        Optional<RequestCount> requestCount = requestCountRepository.findById(requestCountId);
+        if (requestCount.isEmpty()) {
             // create new entity if it doesn't exist
             log.info("Initializing request count entity.");
             requestCountRepository.save(new RequestCount(requestCountId, 0L));
         }
-        return requestCount != null;
+        return requestCount.isPresent();
     }
 }

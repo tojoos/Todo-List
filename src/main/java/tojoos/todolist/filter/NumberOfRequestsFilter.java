@@ -28,7 +28,6 @@ public class NumberOfRequestsFilter extends OncePerRequestFilter {
       log.info("Incoming request, [HTTP {}], URI: {}", request.getMethod(), request.getRequestURI());
       requestCountService.incrementRequestCount();
     }
-    //requestCountService.incrementRequestCount();
     filterChain.doFilter(request, response);
   }
 }

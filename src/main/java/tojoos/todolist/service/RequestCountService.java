@@ -1,6 +1,6 @@
 package tojoos.todolist.service;
 
 public interface RequestCountService {
-    Long incrementRequestCount();
+    void incrementRequestCount();
     Long getRequestCount();
 }

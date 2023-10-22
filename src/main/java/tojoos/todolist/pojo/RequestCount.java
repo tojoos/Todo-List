@@ -13,6 +13,7 @@ import lombok.Setter;
 @Entity
 public class RequestCount {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long value;
